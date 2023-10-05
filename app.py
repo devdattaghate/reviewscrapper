@@ -3,6 +3,7 @@ from flask_cors import CORS,cross_origin
 import requests
 from bs4 import BeautifulSoup as bs
 from urllib.request import urlopen as uReq
+import ssl
 
 app = Flask(__name__)
 
@@ -18,7 +19,8 @@ def index():
         try:
             searchString = request.form['content'].replace(" ","")
             flipkart_url = "https://www.flipkart.com/search?q=" + searchString
-            uClient = uReq(flipkart_url)
+            context = ssl._create_unverified_context()
+            uClient = uReq(flipkart_url, context=context)
             flipkartPage = uClient.read()
             uClient.close()
             flipkart_html = bs(flipkartPage, "html.parser")
